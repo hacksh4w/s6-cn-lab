@@ -37,7 +37,9 @@ int main(){
    //to chat // accept buffer and string
     strcpy(buffer, "Hello there, i am client, how are u doing?");
     send(clientfd, buffer, sizeof(buffer),0);
-    
+    recv(clientfd, buffer, sizeof(buffer),0);
+    printf("Data received from server : %s", buffer);
+   
    
    //close socket
    close(clientfd);
