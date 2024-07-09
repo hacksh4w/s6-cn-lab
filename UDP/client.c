@@ -28,15 +28,27 @@ int main() {
   serverAddrSize = sizeof(serverAddr);
 
   //bind 
-  bind(clientfd,(struct sockaddr*)&serverAddr,serverAddrSize);
-  
+  if(bind(clientfd,(struct sockaddr*)&serverAddr,serverAddrSize)) < 0 {
+   printf("Scoket bind failed \n");
+     exit(0); // error status
+  } else 
+      printf("Socket binded successfully \n");
+
   //send message to client
   printf("Sending message to sevrer");
   strcpy(buff, "Hi, server, this is clienttt");
-  sendto(clientfd,buff,strlen(buff),0, (struct sockaddr *)&serverAddr,serverAddrSize);
+  if (sendto(clientfd,buff,strlen(buff),0, (struct sockaddr *)&serverAddr,serverAddrSize)) < 0  {
+     printf("Failed to send to server \n");
+     exit(0); // error status
+  } else 
+      printf("Message sent to server successfully \n");
 
   //recv msg from server
-  recvfrom(clientfd,buff,sizeof(buff),0, (struct sockaddr *)&serverAddr, &serverAddrSize);
+  if(recvfrom(clientfd,buff,sizeof(buff),0, (struct sockaddr *)&serverAddr, &serverAddrSize)) < 0  {
+     printf("Unable to receive from server, try again\n");
+     exit(0); // error status
+  } else 
+      printf("Message received from server successfully \n");
   printf("Received msg from server :%s",buff);
 
   close(clientfd);
