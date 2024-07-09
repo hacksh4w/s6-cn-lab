@@ -28,18 +28,35 @@ int main() {
   clientAddrSize = sizeof(serverAddr);
 
   //bind
-  bind(serverfd,(struct sockaddr*)&serverAddr,clientAddrSize);
+  if(bind(serverfd,(struct sockaddr*)&serverAddr,clientAddrSize)) <0 {
+    printf("Unable to bind");
+    exit(1);
+  }
+  else 
+    printf("Successfully binded");
+
   //listen to recv msg from server
-  recvfrom(serverfd,buff,sizeof(buff),0, (struct sockaddr *)&serverAddr, &clientAddrSize);
+  
+  if(recvfrom(serverfd,buff,sizeof(buff),0, (struct sockaddr *)&serverAddr, &clientAddrSize))<0 {
+    printf("Unable to rcv, try again!");
+    exit(1);
+  }
+  else 
+    printf("Successfully rcved message from client");
+  
   printf("Listening at port 2002\n");
   printf("Received msg from server : %s \n", buff);
   
   //send message to client
   strcpy(buff, "Hi, client, this is server");
   printf("Sending message to sevrer");
-  sendto(serverfd,buff,strlen(buff),0, (struct sockaddr *)&serverAddr,clientAddrSize);
-
-
+  if(sendto(serverfd,buff,strlen(buff),0, (struct sockaddr *)&serverAddr,clientAddrSize))<0 {
+    printf("Unable to send to server");
+    exit(1);
+  }
+  else 
+    printf("Successfully sent to server");
+  
   close(serverfd);
   return 0;
 }
